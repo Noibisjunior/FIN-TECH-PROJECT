@@ -130,7 +130,7 @@ async function register(req, res) {
     
         await user.save({ validateBeforeSave: false });
     
-        // 3. Send the reset token to the user's email (URL should be front-end based)
+        //  Sending the reset token to the user's email (URL should be front-end based)
         const resetURL = `${req.protocol}://${req.get('host')}/api/auth/reset-password/${resetToken}`;
     
         try {
