@@ -83,7 +83,8 @@ async function register(req, res) {
         }
 
         // Compare the submitted password with the hashed password in the database
-        const isMatch = await argon2.verify(user.password, password );
+        const isMatch = await argon2.verify(user.password, password);
+    
 
         if (!isMatch) {
             return res.status(400).json({ msg: 'Incorrect password' });
@@ -95,7 +96,7 @@ async function register(req, res) {
         });
 
         // Send token as a cookie
-        res.cookie('token', token, { secure: false, httpOnly: true });
+        // res.cookie('token', token, { secure: false, httpOnly: true });
 
         return res.status(200).json({
             status:200,
@@ -180,6 +181,9 @@ async function register(req, res) {
             resetPasswordToken: hashedToken,
             resetPasswordExpires: { $gt: Date.now() }  // Token must not be expired
         });
+
+// console.log('Token from URL:', tokens);
+// console.log('Hashed token from URL:', hashedToken);
     
         if (!user) {
             return res.status(400).json({ message: 'Token is invalid or has expired' });
@@ -194,7 +198,7 @@ async function register(req, res) {
         await user.save();
     
       
-        const token = JWT.sign({ userId: user._id }, process.env.JWT_SECRET, {
+        const jwtToken = JWT.sign({ userId: user._id }, process.env.JWT_SECRET, {
             expiresIn: '1d',
         });
     
@@ -202,13 +206,27 @@ async function register(req, res) {
             status: 200,
             message: 'Password reset successfully',
             data: {
-                tokens,
+                token: jwtToken,
                 user: {
                     email: user.email,
                     name: user.username,
                 }
             }
+
         });
     };
+
+    async function logOut(req, res) {
+        // Clear the token cookie by setting it to expire in the past
+        res.cookie('token', '', {
+            expires: new Date(Date.now() - 1000), //  cookie expires immediately
+            httpOnly: true, // Prevents JavaScript access to the cookie
+            // secure: process.env.NODE_ENV === 'production', // Only send cookie over HTTPS in production
+        });
+        
+        res.status(200).json({ status: 200,message: 'Logout successful' });
+    }
     
-module.exports = { register,login,forgotPassword,resetPassword };
+
+    
+module.exports = { register,login,forgotPassword,resetPassword,logOut };
