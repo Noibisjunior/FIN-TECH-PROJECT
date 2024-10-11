@@ -83,7 +83,7 @@ async function register(req, res) {
         }
 
         // Compare the submitted password with the hashed password in the database
-        const isMatch = await argon2.verify(user.password, password);
+        const isMatch = await user.comparePassword(password);
     
 
         if (!isMatch) {

@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const argon2 = require('argon2');
+const bcrypt = require('bcrypt');
 const JWT = require('jsonwebtoken');
 const validator = require('validator');
 const crypto = require ('crypto')
@@ -60,26 +60,14 @@ type: String,
 });
 
 // Middleware to hash password before saving to the database
-authSchema.pre('save', async function (next) {
-  // Only hash the password if it has been modified 
-  if (!this.isModified('password')) return next();
-
-  try {
-    // Hashing the password using argon2
-    this.password = await argon2.hash(this.password);
-
-    // Preventing confirmPassword from being saved to the database
-    this.confirmPassword = undefined;
-    next();
-  } catch (error) {
-    next(error);
-  }
+authSchema.pre('save', async function () {
+  const salt = await bcrypt.genSalt(10);
+  this.password = await bcrypt.hash(this.password, salt);
+  this.confirmPassword = undefined;
 });
-
-// Method to compare the password for login
 authSchema.methods.comparePassword = async function (userPassword) {
-  // Compare the hashed password stored in the DB with the provided password
-  return await argon2.verify(this.password, userPassword);
+  const isMatch = bcrypt.compare(userPassword, this.password);
+  return isMatch;
 };
 
 // Method to create a JWT for the user
