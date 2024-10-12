@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
 const {verifyToken} = require('../middlewares/authMiddleware.js');
-// Correct way to import functions
 const { login, 
         register, 
         forgotPassword,
@@ -9,6 +8,7 @@ const { login,
         logOut } = require('../controller/auth.js');
 
 const {getUserBalances} = require('../controller/userController.js')
+const {getUserAccounts} = require('../controller/accountController.js')
 
 // Creating POST routes
 router.route('/api/auth/register').post(register);
@@ -18,6 +18,7 @@ router.route('/api/auth/reset-password/:tokens').post(resetPassword);
 router.route('/api/auth/logOut').post(logOut)
 
 router.route('/api/users/balances').get(verifyToken,getUserBalances);
+router.route('/api/accounts').get(verifyToken,getUserAccounts);
 
 
 module.exports = router;
