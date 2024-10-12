@@ -28,7 +28,7 @@ async function register(req, res) {
       });
   }
     // Check if the user already exists
-    const user = await Auth.findOne({ email });
+    const user = await Auth.findOne({ email,username });
 
     if (user) {
         return res.status(400).json({message:'user already exist'});
