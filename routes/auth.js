@@ -9,6 +9,9 @@ const { login,
 
 const {getUserBalances} = require('../controller/userController.js')
 const {getUserAccounts} = require('../controller/accountController.js')
+const {getInvoiceSummary} = require('../controller/invoiceController.js')
+const {getCurrentExchangeRates} = require('../controller/ExchangeRateController.js')
+
 
 // Creating POST routes
 router.route('/api/auth/register').post(register);
@@ -19,6 +22,8 @@ router.route('/api/auth/logOut').post(logOut)
 
 router.route('/api/users/balances').get(verifyToken,getUserBalances);
 router.route('/api/accounts').get(verifyToken,getUserAccounts);
+router.route('/api/invoices/summary').get(verifyToken,getInvoiceSummary);
+router.route('/api/rates').get(getCurrentExchangeRates);
 
 
 module.exports = router;
