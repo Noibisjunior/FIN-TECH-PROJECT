@@ -2,25 +2,26 @@ const axios = require('axios');
 
 const getCurrentExchangeRates = async (req, res) => {
   try {
-    const userCurrency = 'NGN';
+    // User's local currency, fallback to 'USD' if not available
+    const userCurrency = req.user?.localCurrency || 'USD';
 
-    // Simulate fetching exchange rates (or replace with actual API call)
-    const response = await axios.get(`https://api.exchangeratesapi.io/latest?base=${userCurrency}&access_key=35971f8110aec0cc031e38e39193a067`);
+    // Make a request to the ExchangeRate-API
+    const response = await axios.get(`https://v6.exchangerate-api.com/v6/7bb8d0d2dd217300475a059e/latest/${userCurrency}`);
+    const rates = response.data?.conversion_rates;
 
-    const rates = response.data?.rates;
-
+    // Check if rates are defined and not empty
     if (!rates || Object.keys(rates).length === 0) {
       return res.status(404).json({
         status: 404,
-        message: 'No exchange rates found'
+        message: 'No exchange rates found',
       });
     }
 
-    // Format the exchange rates into the required structure
+    // Format the exchange rates
     const formattedRates = Object.keys(rates).map(currency => ({
       currency,
-      buyPrice: (rates[currency] * 0.98).toFixed(2),
-      sellPrice: (rates[currency] * 1.02).toFixed(2)
+      buyPrice: (rates[currency] * 0.98).toFixed(2),  // Simulate buy price with a 2% reduction
+      sellPrice: (rates[currency] * 1.02).toFixed(2)  // Simulate sell price with a 2% increase
     }));
 
     return res.status(200).json({
@@ -28,14 +29,14 @@ const getCurrentExchangeRates = async (req, res) => {
       message: 'Retrieved current exchange rates successfully',
       data: {
         currency: userCurrency,
-        rates: formattedRates
-      }
+        rates: formattedRates,
+      },
     });
   } catch (error) {
-    console.error('Error fetching exchange rates:', error);
+    console.error('Error fetching exchange rates:', error.message);
     return res.status(500).json({
       status: 500,
-      message: 'Server error'
+      message: 'Server error',
     });
   }
 };
