@@ -12,6 +12,13 @@ const {getUserAccounts} = require('../controller/accountController.js')
 const {getInvoiceSummary} = require('../controller/invoiceController.js')
 const {getCurrentExchangeRates} = require('../controller/ExchangeRateController.js')
 const {getActiveVirtualCard } = require('../controller/virtualCard.js')
+const { getAccountById } = require('../controller/IndividualAccount.js');
+const { createInvoice } = require('../controller/userInvoice.js');
+const {  getAllInvoices } = require('../controller/userInvoice.js');
+const {  viewDraftInvoices } = require('../controller/userInvoice.js');
+
+
+
 
 
 // Creating POST routes
@@ -20,12 +27,16 @@ router.route('/api/auth/login').post(login);
 router.route('/api/auth/forgot-password').post(forgotPassword);
 router.route('/api/auth/reset-password/:tokens').post(resetPassword);
 router.route('/api/auth/logOut').post(logOut)
+router.route('/api/userInvoices').post(verifyToken, createInvoice);
 
 router.route('/api/users/balances').get(verifyToken,getUserBalances);
 router.route('/api/accounts').get(verifyToken,getUserAccounts);
 router.route('/api/invoices/summary').get(verifyToken,getInvoiceSummary);
 router.route('/api/rates').get(getCurrentExchangeRates);
 router.route('/api/cards').get(verifyToken,getActiveVirtualCard );
+router.route('/api/accounts/:id').get(getAccountById);
+router.route('/api/getAllInvoices').get(verifyToken,getAllInvoices);
+router.route('/api/viewDraftInvoices').get(verifyToken,viewDraftInvoices);
 
 
 module.exports = router;

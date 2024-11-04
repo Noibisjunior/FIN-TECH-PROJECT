@@ -24,7 +24,7 @@ const getInvoiceSummary = async (req, res) => {
     // If no invoices are found, create dummy invoices and count again
     if (dueCount === 0 && overdueCount === 0 && pendingCount === 0) {
       await createDummyInvoices(userId);
-      
+       
       // Fetch the counts again after creating dummy invoices
       dueCount = await Invoice.countDocuments({ userId, status: 'due' });
       overdueCount = await Invoice.countDocuments({ userId, status: 'overdue' });

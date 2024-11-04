@@ -27,7 +27,7 @@ const getActiveVirtualCard = async (req, res) => {
 const activeCard = await Card.find({
     userId: userId,
     status: 'active'
-  })
+  }) 
     .sort({ createdAt: -1 })
     .limit(parseInt(limit));
 
@@ -50,13 +50,13 @@ const activeCard = await Card.find({
         status: 200,
         message: 'Retrieved active virtual card successfully',
         data: {
-          name: activeCard[0].name,
-          type: activeCard[0].type,
-          brand: activeCard[0].brand,
-          cardNumber: activeCard[0].cardNumber,
-          expiryDate: activeCard[0].expiryDate,
-          cvv: activeCard[0].cvv,
-          billingAddress: activeCard[0].billingAddress,
+          name: 'Test Card',
+          type: 'Debit',
+          brand: 'MasterCard',
+          cardNumber: 1234567812345678,
+          expiryDate: 22/28,
+          cvv: '...',
+          billingAddress: 'San-Francisco',
         },
       });
     } catch (error) {
