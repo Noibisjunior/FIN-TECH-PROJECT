@@ -16,6 +16,9 @@ const { getAccountById } = require('../controller/IndividualAccount.js');
 const { createInvoice } = require('../controller/userInvoice.js');
 const {  getAllInvoices } = require('../controller/userInvoice.js');
 const {  viewDraftInvoices } = require('../controller/userInvoice.js');
+const {  pendingInvoices } = require('../controller/userInvoice.js');
+const {  getDueInvoices } = require('../controller/userInvoice.js');
+const {  overDueInvoices } = require('../controller/userInvoice.js');
 
 
 
@@ -37,7 +40,9 @@ router.route('/api/cards').get(verifyToken,getActiveVirtualCard );
 router.route('/api/accounts/:id').get(getAccountById);
 router.route('/api/getAllInvoices').get(verifyToken,getAllInvoices);
 router.route('/api/viewDraftInvoices').get(verifyToken,viewDraftInvoices);
-
+router.route('/api/pendingInvoices').get(verifyToken,pendingInvoices);
+router.route('/api/dueInvoices').get(verifyToken,getDueInvoices);
+router.route('/api/overdueInvoices').get(verifyToken,overDueInvoices);
 
 module.exports = router;
 
