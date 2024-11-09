@@ -42,26 +42,35 @@ const createInvoice = async (req, res) => {
 
 
 
+
 const getAllInvoices = async (req, res) => {
   try {
-    const userId = req.user.id; // Get user ID from the token
-    const page = parseInt(req.query.page) || 0; 
-    const size = parseInt(req.query.size) || 10; 
+    const userId = req.user.id;
+    const { page = 0, size = 10, terms = '' } = req.query;
 
-    
-    const offset = page * size;
+    const pageNumber = parseInt(page);
+    const pageSize = parseInt(size);
 
-    
-    const invoices = await Invoice.find({ userId })
-      .skip(offset)
-      .limit(size)
-      .select('id shareable customer currency issueDate dueDate') // Retrieve only necessary fields
-      .exec();
+    let query = { userId }; // Default query to get all invoices for the user
 
-    
-    const formattedInvoices = invoices.map(invoice => ({
-        id: invoice._id,
-      shareable: `<https://link-to-view-invoice.com/${invoice._id}>`, 
+    // If a search term is provided, modify the query for search
+    if (terms) {
+      query = {
+        ...query,
+        $or: [
+          { 'customer.name': { $regex: terms, $options: 'i' } },
+          { 'customer.email': { $regex: terms, $options: 'i' } }
+        ]
+      };
+    }
+
+    const invoices = await Invoice.find(query)
+      .skip(pageNumber * pageSize)
+      .limit(pageSize);
+
+      const formattedInvoices = invoices.map(invoice => ({
+      id: invoice._id,
+      shareable: `<https://link-to-view-invoice.com/${invoice._id}>`,
       customer: {
         name: invoice.customer.name,
         email: invoice.customer.email,
@@ -74,7 +83,9 @@ const getAllInvoices = async (req, res) => {
 
     return res.status(200).json({
       status: 200,
-      message: 'Retrieved all paginated invoices successfully',
+      message: terms
+        ? 'Retrieved all paginated searched invoices successfully'
+        : 'Retrieved all invoices successfully',
       data: formattedInvoices
     });
   } catch (error) {
@@ -281,9 +292,41 @@ const overDueInvoices = async (req, res) => {
 };
 
 
+const deleteInvoice = async (req, res) => {
+  try {
+    const invoiceId = req.params.id; // Extract invoice ID from URL parameters
+    const userId = req.user.id; // Extract user ID from request from 'verifyToken' middleware
+
+    // Find the invoice by ID and check if it belongs to the user
+    const invoice = await Invoice.findOne({ _id: invoiceId, userId });
+    if (!invoice) {
+      return res.status(404).json({
+        status: 404,
+        message: 'Invoice not found',
+        data: {}
+      });
+    }
+
+    // Delete the invoice
+    await Invoice.deleteOne({ _id: invoiceId });
+
+    return res.status(200).json({
+      status: 200,
+      message: 'Invoice deleted successfully',
+      data: {}
+    });
+  } catch (error) {
+    console.error('Error deleting invoice:', error);
+    return res.status(500).json({
+      status: 500,
+      message: 'Server error',
+      data: {}
+    });
+  }
+};
 
 
 
 module.exports = {createInvoice, getAllInvoices, 
                   viewDraftInvoices,pendingInvoices,
-                  getDueInvoices,overDueInvoices};
+                  getDueInvoices,overDueInvoices,deleteInvoice};
