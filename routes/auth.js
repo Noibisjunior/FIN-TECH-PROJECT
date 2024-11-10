@@ -20,6 +20,10 @@ const {  pendingInvoices } = require('../controller/userInvoice.js');
 const {  getDueInvoices } = require('../controller/userInvoice.js');
 const {  overDueInvoices } = require('../controller/userInvoice.js');
 const {  deleteInvoice } = require('../controller/userInvoice.js');
+const {  createCard } = require('../controller/card.js');
+const {  getAllCards } = require('../controller/card.js');
+const {   getCardById } = require('../controller/card.js');
+const {  deleteCard } = require('../controller/card.js');
 
 
 
@@ -32,6 +36,7 @@ router.route('/api/auth/forgot-password').post(forgotPassword);
 router.route('/api/auth/reset-password/:tokens').post(resetPassword);
 router.route('/api/auth/logOut').post(logOut)
 router.route('/api/userInvoices').post(verifyToken, createInvoice);
+router.route('/api/createCard').post(verifyToken, createCard);
 
 // Creating GET routes
 router.route('/api/users/balances').get(verifyToken,getUserBalances);
@@ -45,8 +50,12 @@ router.route('/api/viewDraftInvoices').get(verifyToken,viewDraftInvoices);
 router.route('/api/pendingInvoices').get(verifyToken,pendingInvoices);
 router.route('/api/dueInvoices').get(verifyToken,getDueInvoices);
 router.route('/api/overdueInvoices').get(verifyToken,overDueInvoices);
+router.route('/api/getAllCards').get(verifyToken,getAllCards);
+router.route('/api/cards/:id').get(verifyToken, getCardById);
+
 
 router.route('/api/invoices/:id').delete(verifyToken,deleteInvoice);
+router.route('/api/card/:id').delete(verifyToken,deleteCard);
 
 module.exports = router;
 
