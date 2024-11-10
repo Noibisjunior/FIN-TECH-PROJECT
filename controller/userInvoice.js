@@ -294,8 +294,8 @@ const overDueInvoices = async (req, res) => {
 
 const deleteInvoice = async (req, res) => {
   try {
-    const invoiceId = req.params.id; // Extract invoice ID from URL parameters
-    const userId = req.user.id; // Extract user ID from request from 'verifyToken' middleware
+    const invoiceId = req.params.id; 
+    const userId = req.user.id; 
 
     // Find the invoice by ID and check if it belongs to the user
     const invoice = await Invoice.findOne({ _id: invoiceId, userId });
@@ -307,7 +307,7 @@ const deleteInvoice = async (req, res) => {
       });
     }
 
-    // Delete the invoice
+
     await Invoice.deleteOne({ _id: invoiceId });
 
     return res.status(200).json({
