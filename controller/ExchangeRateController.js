@@ -1,12 +1,15 @@
 const axios = require('axios');
+require('dotenv').config();
+
+
 
 const getCurrentExchangeRates = async (req, res) => {
   try {
     // User's local currency, fallback to 'USD' if not available
     const userCurrency = req.user?.localCurrency || 'USD';
 
-    // Make a request to the ExchangeRate-API
-    const response = await axios.get(`https://v6.exchangerate-api.com/v6/7bb8d0d2dd217300475a059e/latest/${userCurrency}`);
+    const apiKey = process.env.EXCHANGE_RATE_API_KEY;
+    const response = await axios.get(`https://v6.exchangerate-api.com/v6/${apiKey}/latest/${userCurrency}`);
     const rates = response.data?.conversion_rates;
 
     // Check if rates are defined and not empty
