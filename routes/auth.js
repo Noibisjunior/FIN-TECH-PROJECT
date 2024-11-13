@@ -30,6 +30,11 @@ const {  deleteCard } = require('../controller/card.js');
 const {  getIndividualAccountDetails } = require('../controller/walletDetails.js');
 const {  getIncomesAndExpenses  } = require('../controller/walletDetails.js');
 const {  sendMoney  } = require('../controller/sendMoney');
+const {  convertCurrency  } = require('../controller/sendMoney');
+const {  handleDepositWebhook  } = require('../controller/webHook');
+const { depositToAccount  } = require('../controller/sendMoney');
+const { getAllTransactions  } = require('../controller/Transaction.js');
+const { getTransactionById  } = require('../controller/Transaction.js');
 
 
 
@@ -43,8 +48,11 @@ router.route('/api/auth/reset-password/:tokens').post(resetPassword);
 router.route('/api/auth/logOut').post(logOut)
 router.route('/api/userInvoices').post(verifyToken, createInvoice);
 router.route('/api/createCard').post(verifyToken, createCard);
-router.route('/api/wallet/send').post(verifyToken, sendMoney);
-
+router.route('/api/wallets/send').post(verifyToken, sendMoney);
+router.route('/api/wallets/convert').post(verifyToken, convertCurrency);
+router.route('/api/wallets/deposit').post(verifyToken, depositToAccount);
+router.route('/api/wallets/deposit-webhook').post(handleDepositWebhook);
+router.route('/api/wallets/withdraw').post();
 
 
 
@@ -66,6 +74,9 @@ router.route('/api/wallets/balance').get(verifyToken, getCurrentBalance);
 router.route('/api/wallets/statements').get(verifyToken, getAccountStatement );
 router.route('/api/wallets/accounts/:id').get(verifyToken, getIndividualAccountDetails );
 router.route('/api/wallets/expenses-incomes').get(verifyToken, getIncomesAndExpenses);
+router.route('/api/transactions').get(verifyToken, getAllTransactions);
+router.route('/api/transactions/:id').get(verifyToken, getTransactionById);
+
 
 
 router.route('/api/invoices/:id').delete(verifyToken,deleteInvoice);
