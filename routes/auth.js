@@ -35,6 +35,9 @@ const {  handleDepositWebhook  } = require('../controller/webHook');
 const { depositToAccount  } = require('../controller/sendMoney');
 const { getAllTransactions  } = require('../controller/Transaction.js');
 const { getTransactionById  } = require('../controller/Transaction.js');
+const {  getCurrentUser  } = require('../controller/userProfile.js');
+const {  editUserProfile  } = require('../controller/userProfile.js');
+const {  addBeneficiary  } = require('../controller/beneficiary.js');
 
 
 
@@ -53,6 +56,7 @@ router.route('/api/wallets/convert').post(verifyToken, convertCurrency);
 router.route('/api/wallets/deposit').post(verifyToken, depositToAccount);
 router.route('/api/wallets/deposit-webhook').post(handleDepositWebhook);
 router.route('/api/wallets/withdraw').post();
+router.route('/api/users/:id/beneficiaries').post(verifyToken,addBeneficiary);
 
 
 
@@ -76,6 +80,9 @@ router.route('/api/wallets/accounts/:id').get(verifyToken, getIndividualAccountD
 router.route('/api/wallets/expenses-incomes').get(verifyToken, getIncomesAndExpenses);
 router.route('/api/transactions').get(verifyToken, getAllTransactions);
 router.route('/api/transactions/:id').get(verifyToken, getTransactionById);
+router.route('/api/currentUser').get(verifyToken, getCurrentUser);
+router.route('/api/currentUser').get(verifyToken, getCurrentUser);
+router.route('/api/users/{id}').get(verifyToken, editUserProfile );
 
 
 
