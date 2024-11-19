@@ -38,6 +38,10 @@ const { getTransactionById  } = require('../controller/Transaction.js');
 const {  getCurrentUser  } = require('../controller/userProfile.js');
 const {  editUserProfile  } = require('../controller/userProfile.js');
 const {  addBeneficiary  } = require('../controller/beneficiary.js');
+const {  searchBeneficiaries  } = require('../controller/beneficiary.js');
+const {  deleteBeneficiary  } = require('../controller/beneficiary.js');
+const {  activate2FA  } = require('../controller/2FA.js');
+const {  verifyUser  } = require('../controller/verifyUser.js');
 
 
 
@@ -57,6 +61,8 @@ router.route('/api/wallets/deposit').post(verifyToken, depositToAccount);
 router.route('/api/wallets/deposit-webhook').post(handleDepositWebhook);
 router.route('/api/wallets/withdraw').post();
 router.route('/api/users/:id/beneficiaries').post(verifyToken,addBeneficiary);
+router.route('/api/users/2fa').post(verifyToken, activate2FA);
+router.route('/api/verification').post(verifyToken, verifyUser);
 
 
 
@@ -82,11 +88,13 @@ router.route('/api/transactions').get(verifyToken, getAllTransactions);
 router.route('/api/transactions/:id').get(verifyToken, getTransactionById);
 router.route('/api/currentUser').get(verifyToken, getCurrentUser);
 router.route('/api/currentUser').get(verifyToken, getCurrentUser);
-router.route('/api/users/{id}').get(verifyToken, editUserProfile );
+router.route('/api/users/:id').get(verifyToken, editUserProfile );
+router.route('/api/beneficiaries/').get(verifyToken, searchBeneficiaries );
 
 
 
 router.route('/api/invoices/:id').delete(verifyToken,deleteInvoice);
+router.route('/api/beneficiaries/:id').delete(verifyToken,deleteBeneficiary);
 router.route('/api/card/:id').delete(verifyToken,deleteCard);
 
 module.exports = router;
