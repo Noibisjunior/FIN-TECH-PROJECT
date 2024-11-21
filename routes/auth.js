@@ -42,6 +42,10 @@ const {  searchBeneficiaries  } = require('../controller/beneficiary.js');
 const {  deleteBeneficiary  } = require('../controller/beneficiary.js');
 const {  activate2FA  } = require('../controller/2FA.js');
 const {  verifyUser  } = require('../controller/verifyUser.js');
+const {  getNotificationCount  } = require('../controller/notification.js');
+const {  getNotificationById } = require('../controller/notification.js');
+const {  updateNotificationStatus } = require('../controller/notification.js');
+const {  deleteNotification } = require('../controller/notification.js');
 
 
 
@@ -90,13 +94,19 @@ router.route('/api/currentUser').get(verifyToken, getCurrentUser);
 router.route('/api/currentUser').get(verifyToken, getCurrentUser);
 router.route('/api/users/:id').get(verifyToken, editUserProfile );
 router.route('/api/beneficiaries/').get(verifyToken, searchBeneficiaries );
+router.route('/api/notifications/count').get(verifyToken, getNotificationCount );
+router.route('/api/notifications/:id').get(verifyToken, getNotificationById );
+
 
 
 
 router.route('/api/invoices/:id').delete(verifyToken,deleteInvoice);
 router.route('/api/beneficiaries/:id').delete(verifyToken,deleteBeneficiary);
 router.route('/api/card/:id').delete(verifyToken,deleteCard);
+router.route('/api/notification/:id').delete(verifyToken,deleteNotification);
 
+
+router.route('/api/notifications/:id').put(verifyToken, updateNotificationStatus );
 module.exports = router;
 
 
