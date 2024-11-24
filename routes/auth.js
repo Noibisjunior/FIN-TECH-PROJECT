@@ -24,7 +24,6 @@ const {  createCard } = require('../controller/card.js');
 const {  getAllCards } = require('../controller/card.js');
 const {   getCardById } = require('../controller/card.js');
 const {   getCurrentBalance } = require('../controller/walletBalance.js');
-const {   getCurrentBalance } = require('../controller/walletBalance.js');
 const {   getAccountStatement  } = require('../controller/walletBalance.js');
 const {  deleteCard } = require('../controller/card.js');
 const {  getIndividualAccountDetails } = require('../controller/walletDetails.js');

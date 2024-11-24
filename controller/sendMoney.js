@@ -6,7 +6,6 @@ require('dotenv').config();
 const Account = require('../models/AccountModel'); 
 const UserBalance = require('../models/wallet'); //  User model with wallet balance
 const { validationResult } = require('express-validator'); // For validating inputs
-const { getExchangeRate } = require('../utils/exchangeRateService');
 
 
 const sendMoney = async (req, res) => {
